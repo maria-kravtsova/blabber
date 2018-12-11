@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/moon.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<p>⚠️ This talk is in alpha version</p>
+				</section>
+				<section><h2>DESIGN YOUR OWN STONE</h2></section>
+				<section id="fragments">
+					<p>There are ~9,897,000,078 stones in the world</p>
+					<p class="fragment">... there is room for yours!</p>
+				</section>
+				<section><h3>Create a grammar file</h3></section>
+				<section>
+					<p>Ruby holds all its grammar rules in <a href="https://github.com/ruby/ruby/blob/trunk/parse.y#L7940">parse.y</a></p>
+					<p>Let's say you have this code:</p>
+					<code class="hljs">isQuestion ? answer : silence</code>
+				</section>
+				<section><h3>Tokenize rules</h3></section>
+				<section id="fragments">
+					<code class="hljs">isQuestion ? answer : silence</code>
+					<br />
+					<code class="hljs fragment">tIDENTIFIER ? tIDENTIFIER : tIDENTIFIER</code>
+					<p class="fragment">Identifiers?</p>
+					<p class="fragment">Identifiers are words in your Ruby code that are not <a href="https://github.com/pmq20/ruby-packer/blob/master/ruby/lex.c.blt#L160">reserved words</a></p>
+				</section>
+				<section><h3>Time to parse</h3></section>
+				<section>
+					<p>The most widely used parser generator is Yacc</p>
+					<p class="fragment">Yet Another Compiler Compiler</p>
+					<p class="fragment">Ruby < 1.8 uses Bison</p>
+					<p class="fragment">LALR (aka Bison) stands for Look-Ahead Left Reversed Rightmost Derivation</p>
+				</section>
+				<section>
+					<strong>Left</strong>
+					<p>parser moves from left to right while processing the token stream.</p>
+					<strong>Right</strong>
+					<p>parser takes a bottom-up strategy, using a shift/reduce technique, to find matching grammar rules.</p>
+				</section>
+				<section>
+					<strong>Look Ahead</strong>
+					<ul>
+						<li>parser looks ahead at the next token<li>
+						<li>parser maintains a state table of possible outcomes depending on what the next token is and which grammar rule was just parsed<li>
+					</ul>
+				</section>
+				<section>
+					<img src="/run-time.png">
+				</section>
+				<section>
+					<p>AST?</p>
+					<p class="fragment">Abstract Syntax Tree</p>
+					<p class="fragment"><code class="hljs">%w(hello world).map { |c| c.upcase }</code></p>
+				</section>
+				<section>
+					<p>Now what?</p>
+					<p class="fragment"><a href="https://www.antlr.org/">ANTLR (ANother Tool for Language Recognition)</a></p>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
